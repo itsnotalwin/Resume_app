@@ -24,6 +24,16 @@
     overflow-x: hidden;
   }
 
+  /* SPOTLIGHT */
+  #spotlight {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: radial-gradient(600px circle at var(--mx, -999px) var(--my, -999px), rgba(255,255,255,0.03) 0%, transparent 70%);
+    transition: background 0.1s;
+  }
+
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
@@ -34,10 +44,50 @@
     transition: border-color 0.4s, background 0.4s;
   }
   nav.scrolled { background: rgba(8,8,8,0.95); border-color: var(--line); }
-  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--white); text-decoration: none; }
+
+  .nav-left {
+    display: flex; align-items: center; gap: 2.5rem;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 0.2em;
+    color: var(--white); text-decoration: none;
+    padding-right: 2.5rem;
+    border-right: 1px solid var(--dim);
+  }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a { color: var(--grey); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a {
+    color: var(--grey); text-decoration: none;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; left: 0; bottom: -3px;
+    width: 0; height: 1px;
+    background: var(--white);
+    transition: width 0.25s ease;
+  }
   .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after,
+  .nav-links a.active::after { width: 100%; }
+  .nav-links a.active { color: var(--white); }
+
+  .nav-status {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #3a3;
+    box-shadow: 0 0 6px rgba(50,170,50,0.6);
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(50,170,50,0.6); }
+    50% { opacity: 0.5; box-shadow: 0 0 12px rgba(50,170,50,0.3); }
+  }
 
   /* HERO */
   #hero {
@@ -94,6 +144,28 @@
     animation: lineGrow 1s 1.5s both;
     transform-origin: top;
   }
+
+  /* HERO COUNTER */
+  .hero-counter {
+    position: absolute; right: 3rem; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 1.2rem;
+    opacity: 0; animation: fadeIn 1s 1s forwards;
+  }
+  .counter-item { text-align: right; }
+  .counter-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; line-height: 1;
+    color: var(--white);
+  }
+  .counter-label {
+    font-size: 0.55rem; letter-spacing: 0.2em;
+    color: var(--dim); text-transform: uppercase;
+  }
+  .counter-divider {
+    width: 100%; height: 1px; background: var(--dim);
+  }
+
   @keyframes lineGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -125,13 +197,22 @@
   .detail-value { font-size: 0.82rem; color: var(--white); }
 
   /* EXPERIENCE */
-  #experience .exp-list { display: flex; flex-direction: column; gap: 0; }
+  #experience .exp-list { display: flex; flex-direction: column; }
   .exp-item {
     display: grid; grid-template-columns: 160px 1fr;
     gap: 2.5rem; padding: 2rem 0;
     border-bottom: 1px solid var(--line);
-    transition: background 0.2s;
+    position: relative;
+    transition: padding-left 0.3s ease;
   }
+  .exp-item::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0; background: rgba(255,255,255,0.015);
+    transition: width 0.3s ease;
+    pointer-events: none;
+  }
+  .exp-item:hover::before { width: 100%; }
   .exp-item:first-child { border-top: 1px solid var(--line); }
   .exp-period { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--grey); text-transform: uppercase; margin-bottom: 0.4rem; }
   .exp-company { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.1em; color: var(--white); }
@@ -145,16 +226,22 @@
   #skills .skills-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
   }
-  .skill-group { padding: 1.8rem 2rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .skill-group {
+    padding: 1.8rem 2rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+  }
+  .skill-group:hover { background: rgba(255,255,255,0.015); }
   .skill-group:nth-child(3n) { border-right: none; }
   .skill-group:nth-last-child(-n+3) { border-bottom: none; }
   .skill-group-label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--grey); margin-bottom: 0.9rem; }
   .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .skill-tag { font-size: 0.65rem; padding: 0.28rem 0.65rem; border: 1px solid var(--dim); color: #aaa; letter-spacing: 0.05em; transition: all 0.2s; }
-  .skill-tag:hover { border-color: var(--white); color: var(--white); }
+  .skill-tag { font-size: 0.65rem; padding: 0.28rem 0.65rem; border: 1px solid var(--dim); color: #aaa; letter-spacing: 0.05em; transition: all 0.2s; cursor: default; }
+  .skill-tag:hover { border-color: var(--white); color: var(--white); background: rgba(255,255,255,0.04); }
 
   /* EDUCATION */
-  #education .edu-list { display: flex; flex-direction: column; gap: 0; }
+  #education .edu-list { display: flex; flex-direction: column; }
   .edu-item {
     display: grid; grid-template-columns: 160px 1fr;
     gap: 2.5rem; padding: 1.8rem 0;
@@ -168,8 +255,9 @@
   /* CONTACT */
   #contact { padding-bottom: 6rem; }
   #contact .contact-inner { display: flex; justify-content: space-between; align-items: flex-end; }
-  .contact-cta { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 6vw, 6rem); line-height: 1; letter-spacing: 0.03em; color: var(--white); }
+  .contact-cta { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 6vw, 6rem); line-height: 1; letter-spacing: 0.03em; }
   .contact-cta span { display: block; color: var(--dim); }
+  .contact-cta span:last-child { color: var(--white); }
   .contact-links { display: flex; flex-direction: column; gap: 0.8rem; align-items: flex-end; }
   .contact-link { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--grey); text-decoration: none; text-transform: uppercase; transition: color 0.2s; display: flex; align-items: center; gap: 0.7rem; }
   .contact-link:hover { color: var(--white); }
@@ -188,7 +276,10 @@
   .reveal.visible { opacity: 1; transform: none; }
 
   @media (max-width: 768px) {
-    nav { padding: 1.2rem 1.5rem; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .nav-logo { border-right: none; padding-right: 0; }
+    .hero-counter { display: none; }
     #hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
     #about .about-grid { grid-template-columns: 1fr; gap: 3rem; }
     .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
@@ -200,21 +291,47 @@
 </head>
 <body>
 
+<div id="spotlight"></div>
+
 <nav id="navbar">
-  <a href="#hero" class="nav-logo">AN</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-left">
+    <a href="#hero" class="nav-logo">AN</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="nav-status">
+    <span class="status-dot"></span>
+    <span>Available for opportunities</span>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+
+  <div class="hero-counter">
+    <div class="counter-item">
+      <div class="counter-num" data-target="2">0</div>
+      <div class="counter-label">Years in Logistics</div>
+    </div>
+    <div class="counter-divider"></div>
+    <div class="counter-item">
+      <div class="counter-num" data-target="3">0</div>
+      <div class="counter-label">Countries Covered</div>
+    </div>
+    <div class="counter-divider"></div>
+    <div class="counter-item">
+      <div class="counter-num" data-target="6">0</div>
+      <div class="counter-label">Skill Domains</div>
+    </div>
+  </div>
+
   <p class="hero-label">Customs &amp; Logistics Coordinator</p>
   <h1 class="hero-name">
     <span>Alwin</span>
@@ -425,7 +542,7 @@
     <div class="contact-cta">
       <span>Let's</span>
       <span>Work</span>
-      <span style="color:var(--white)">Together</span>
+      <span>Together</span>
     </div>
     <div class="contact-links">
       <a href="mailto:alwin.newman97@gmail.com" class="contact-link">alwin.newman97@gmail.com</a>
@@ -441,11 +558,27 @@
 </footer>
 
 <script>
+  // Nav scroll effect
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 60);
   });
 
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const observerNav = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => observerNav.observe(s));
+
+  // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
@@ -456,6 +589,37 @@
     });
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
+
+  // Mouse spotlight
+  const spotlight = document.getElementById('spotlight');
+  document.addEventListener('mousemove', e => {
+    spotlight.style.setProperty('--mx', e.clientX + 'px');
+    spotlight.style.setProperty('--my', e.clientY + 'px');
+  });
+
+  // Animated counters
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1200;
+    const start = performance.now();
+    const update = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+  const counterEls = document.querySelectorAll('.counter-num[data-target]');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counterEls.forEach(el => counterObserver.observe(el));
 </script>
 </body>
 </html>
