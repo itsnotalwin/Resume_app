@@ -34,6 +34,33 @@
     transition: background 0.1s;
   }
 
+  /* GRAIN */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    mix-blend-mode: soft-light;
+  }
+
+  /* SCANLINES */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.04;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.03) 3px
+    );
+  }
+
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
@@ -42,6 +69,7 @@
     padding: 1rem 3rem;
     border-bottom: 1px solid transparent;
     transition: border-color 0.4s, background 0.4s;
+    backdrop-filter: blur(12px);
   }
   nav.scrolled { background: rgba(8,8,8,0.95); border-color: var(--line); }
 
@@ -74,6 +102,10 @@
   .nav-links a.active::after { width: 100%; }
   .nav-links a.active { color: var(--white); }
 
+  .nav-right {
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+
   .nav-status {
     display: flex; align-items: center; gap: 0.6rem;
     font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim);
@@ -89,6 +121,35 @@
     50% { opacity: 0.5; box-shadow: 0 0 12px rgba(50,170,50,0.3); }
   }
 
+  /* SYSTEM CLOCK */
+  .system-clock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  #clock-time {
+    color: var(--grey);
+    font-size: 0.62rem;
+  }
+
+  /* COMMAND PALETTE TRIGGER */
+  .palette-trigger {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    cursor: crosshair;
+    transition: color 0.2s;
+    border: 1px solid var(--dim);
+    padding: 0.3rem 0.6rem;
+  }
+  .palette-trigger:hover { color: var(--white); border-color: var(--grey); }
+
   /* HERO */
   #hero {
     height: 100vh;
@@ -97,6 +158,19 @@
     position: relative;
     overflow: hidden;
   }
+
+  /* Section fade masks */
+  section { position: relative; }
+  section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.015), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
   .hero-bg {
     position: absolute; inset: 0;
     background: radial-gradient(ellipse at 80% 20%, #1a1a1a 0%, var(--black) 60%);
@@ -108,6 +182,22 @@
     opacity: 0.4;
     mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
   }
+
+  /* SYSTEM OVERLAYS */
+  .system-overlay {
+    position: absolute;
+    font-size: 0.52rem;
+    line-height: 1.8;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.07);
+    text-transform: uppercase;
+    pointer-events: none;
+    font-family: 'DM Mono', monospace;
+  }
+  .sys-top-left  { top: 7rem; left: 3rem; }
+  .sys-top-right { top: 7rem; right: 14rem; text-align: right; }
+  .sys-bot-left  { bottom: 7rem; left: 3rem; }
+
   .hero-label {
     font-size: 0.65rem; letter-spacing: 0.3em; color: var(--grey);
     text-transform: uppercase; margin-bottom: 1rem;
@@ -222,6 +312,48 @@
   .exp-points li { font-size: 0.74rem; color: #777; padding-left: 1.2rem; position: relative; line-height: 1.65; }
   .exp-points li::before { content: '↳'; position: absolute; left: 0; color: var(--dim); }
 
+  /* SYSTEMS SECTION */
+  #systems .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--line);
+  }
+  .system-card {
+    padding: 2rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.25s ease;
+    position: relative;
+  }
+  .system-card:nth-child(2n) { border-right: none; }
+  .system-card:nth-last-child(-n+2) { border-bottom: none; }
+  .system-card:hover { background: rgba(255,255,255,0.015); }
+  .system-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 1rem;
+  }
+  .system-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+  }
+  .system-card p {
+    font-size: 0.74rem;
+    line-height: 1.8;
+    color: #999;
+    margin-bottom: 1rem;
+  }
+  .system-stack {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
   /* SKILLS */
   #skills .skills-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
@@ -263,6 +395,24 @@
   .contact-link:hover { color: var(--white); }
   .contact-link::after { content: '↗'; font-size: 0.8rem; }
 
+  /* GITHUB STATUS */
+  .github-status {
+    margin-bottom: 1.4rem;
+    text-align: right;
+  }
+  .github-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.35rem;
+  }
+  .github-project {
+    font-size: 0.7rem;
+    color: var(--grey);
+    letter-spacing: 0.08em;
+  }
+
   /* FOOTER */
   footer {
     padding: 1.5rem 3rem;
@@ -275,6 +425,67 @@
   .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: none; }
 
+  /* COMMAND PALETTE */
+  #commandPalette {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 12vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  #commandPalette.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .palette-box {
+    width: min(650px, 90vw);
+    background: #0b0b0b;
+    border: 1px solid var(--line);
+    padding: 1.5rem;
+  }
+  .palette-title {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 1rem;
+  }
+  .palette-hint {
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .palette-box a {
+    display: block;
+    padding: 0.8rem 0;
+    color: #999;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+  }
+  .palette-box a:last-child { border-bottom: none; }
+  .palette-box a:hover {
+    color: var(--white);
+    padding-left: 0.5rem;
+  }
+  .palette-box a span {
+    color: var(--dim);
+    margin-right: 0.5rem;
+  }
+
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
@@ -284,14 +495,20 @@
     #about .about-grid { grid-template-columns: 1fr; gap: 3rem; }
     .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
     #skills .skills-grid { grid-template-columns: 1fr 1fr; }
+    #systems .systems-grid { grid-template-columns: 1fr; }
     #contact .contact-inner { flex-direction: column; align-items: flex-start; gap: 3rem; }
     .hero-scroll { display: none; }
+    .system-clock { display: none; }
+    .palette-trigger { display: none; }
+    .sys-top-right { display: none; }
   }
 </style>
 </head>
 <body>
 
 <div id="spotlight"></div>
+<div class="grain"></div>
+<div class="scanlines"></div>
 
 <nav id="navbar">
   <div class="nav-left">
@@ -299,14 +516,22 @@
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
+      <li><a href="#systems">Systems</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#education">Education</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
-  <div class="nav-status">
-    <span class="status-dot"></span>
-    <span>Available for opportunities</span>
+  <div class="nav-right">
+    <div class="system-clock">
+      <span id="clock-zone">JHB / UTC+2</span>
+      <span id="clock-time">00:00:00</span>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      <span>Available</span>
+    </div>
+    <button class="palette-trigger" id="paletteBtn" aria-label="Open navigation palette">/ nav</button>
   </div>
 </nav>
 
@@ -315,20 +540,34 @@
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
 
+  <!-- System overlays -->
+  <div class="system-overlay sys-top-left">
+    SYS/ACTIVE<br>
+    NODE 04
+  </div>
+  <div class="system-overlay sys-top-right">
+    LATENCY 12ms<br>
+    STATUS ONLINE
+  </div>
+  <div class="system-overlay sys-bot-left">
+    ROUTE/JHB-CPT<br>
+    TRACKING LIVE
+  </div>
+
   <div class="hero-counter">
     <div class="counter-item">
-      <div class="counter-num" data-target="2">0</div>
-      <div class="counter-label">Years in Logistics</div>
+      <div class="counter-num" data-target="500">0</div>
+      <div class="counter-label">Shipments Coordinated</div>
     </div>
     <div class="counter-divider"></div>
     <div class="counter-item">
-      <div class="counter-num" data-target="3">0</div>
-      <div class="counter-label">Countries Covered</div>
+      <div class="counter-num" data-target="12">0</div>
+      <div class="counter-label">Systems Built</div>
     </div>
     <div class="counter-divider"></div>
     <div class="counter-item">
-      <div class="counter-num" data-target="6">0</div>
-      <div class="counter-label">Skill Domains</div>
+      <div class="counter-num" data-target="24">0</div>
+      <div class="counter-label">Workflow Automations</div>
     </div>
   </div>
 
@@ -350,8 +589,12 @@
   </div>
   <div class="about-grid reveal">
     <p class="about-text">
-      Operations-focused logistics professional with hands-on experience coordinating <em>import and export shipments</em>, customs documentation, freight movements, and warehouse workflows in fast-paced environments.<br/><br/>
-      Beyond logistics, I build — turning operational problems into <em>automated, elegant solutions</em>. Whether it's streamlining a workflow or shipping a project, I focus on <em>accuracy, efficiency, and clean execution</em>.
+      Operations-focused logistics coordinator with hands-on experience coordinating
+      <em>import and export shipments</em>, customs documentation, freight movement, and warehouse workflows
+      in fast-paced environments.<br/><br/>
+      Alongside logistics, I design <em>lightweight operational systems</em> —
+      building tools, automations, and interfaces that reduce friction,
+      improve visibility, and simplify execution.
     </p>
     <div class="about-details">
       <div class="detail-item">
@@ -433,10 +676,61 @@
   </div>
 </section>
 
+<!-- SYSTEMS -->
+<section id="systems">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Systems</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="systems-grid reveal">
+    <div class="system-card">
+      <div class="system-label">Workflow Tracking</div>
+      <h3>Shipment Workflow Tracker</h3>
+      <p>
+        Internal operational dashboard for tracking consignments,
+        waybills, tariff totals, and delivery status across active import/export cycles.
+      </p>
+      <div class="system-stack">HTML · JS · Excel Export · Local Storage</div>
+    </div>
+
+    <div class="system-card">
+      <div class="system-label">Operations</div>
+      <h3>Midnight Overtime Logger</h3>
+      <p>
+        Time logging system designed for overnight operational shifts
+        with automatic rollover handling, shift categorisation, and weekly summaries.
+      </p>
+      <div class="system-stack">JavaScript · Local Storage</div>
+    </div>
+
+    <div class="system-card">
+      <div class="system-label">Interface System</div>
+      <h3>Identity OS</h3>
+      <p>
+        Interactive portfolio environment inspired by operational
+        dashboards and lightweight system interfaces. Built as a personal interface layer.
+      </p>
+      <div class="system-stack">HTML · CSS · Motion Systems</div>
+    </div>
+
+    <div class="system-card">
+      <div class="system-label">Creative Infrastructure</div>
+      <h3>Infinite Inspiration Board</h3>
+      <p>
+        Spatial archive system for photography references,
+        research, and visual organisation. Infinite canvas with drag-and-drop logic.
+      </p>
+      <div class="system-stack">Canvas Logic · Vanilla JS</div>
+    </div>
+  </div>
+</section>
+
 <!-- SKILLS -->
 <section id="skills">
   <div class="section-header reveal">
-    <span class="section-num">03</span>
+    <span class="section-num">04</span>
     <h2 class="section-title">Skills</h2>
     <div class="section-line"></div>
   </div>
@@ -509,7 +803,7 @@
 <!-- EDUCATION -->
 <section id="education">
   <div class="section-header reveal">
-    <span class="section-num">04</span>
+    <span class="section-num">05</span>
     <h2 class="section-title">Education</h2>
     <div class="section-line"></div>
   </div>
@@ -534,17 +828,21 @@
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header reveal">
-    <span class="section-num">05</span>
+    <span class="section-num">06</span>
     <h2 class="section-title">Contact</h2>
     <div class="section-line"></div>
   </div>
   <div class="contact-inner reveal">
     <div class="contact-cta">
-      <span>Let's</span>
-      <span>Work</span>
-      <span>Together</span>
+      <span>Available</span>
+      <span>For Operations</span>
+      <span>&amp; Systems</span>
     </div>
     <div class="contact-links">
+      <div class="github-status">
+        <div class="github-label">Latest Build</div>
+        <div class="github-project">identity-os / github.com/itsnotalwin</div>
+      </div>
       <a href="mailto:alwin.newman97@gmail.com" class="contact-link">alwin.newman97@gmail.com</a>
       <a href="tel:+27730958363" class="contact-link">+27 73 095 8363</a>
       <a href="https://github.com/itsnotalwin" target="_blank" class="contact-link">github.com/itsnotalwin</a>
@@ -556,6 +854,20 @@
   <span>Alwin Newman · 2025</span>
   <span>Gauteng, South Africa</span>
 </footer>
+
+<!-- COMMAND PALETTE -->
+<div id="commandPalette">
+  <div class="palette-box">
+    <div class="palette-title">System Navigation</div>
+    <div class="palette-hint">Press Esc to close · Click outside to dismiss</div>
+    <a href="#about" class="palette-link"><span>></span> about</a>
+    <a href="#experience" class="palette-link"><span>></span> experience</a>
+    <a href="#systems" class="palette-link"><span>></span> systems</a>
+    <a href="#skills" class="palette-link"><span>></span> skills</a>
+    <a href="#education" class="palette-link"><span>></span> education</a>
+    <a href="#contact" class="palette-link"><span>></span> contact</a>
+  </div>
+</div>
 
 <script>
   // Nav scroll effect
@@ -620,6 +932,48 @@
     });
   }, { threshold: 0.5 });
   counterEls.forEach(el => counterObserver.observe(el));
+
+  // Live system clock (JHB / UTC+2)
+  function updateClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-ZA', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'Africa/Johannesburg'
+    });
+    document.getElementById('clock-time').textContent = time;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Command palette
+  const palette = document.getElementById('commandPalette');
+
+  function openPalette() { palette.classList.add('active'); }
+  function closePalette() { palette.classList.remove('active'); }
+
+  document.getElementById('paletteBtn').addEventListener('click', openPalette);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openPalette();
+    }
+    if (e.key === 'Escape') closePalette();
+  });
+
+  palette.addEventListener('click', (e) => {
+    if (e.target === palette) closePalette();
+  });
+
+  // Close palette and follow link on palette link click
+  palette.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      setTimeout(closePalette, 80);
+    });
+  });
 </script>
 </body>
 </html>
