@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Alwin Newman</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --black: #080808;
+    --white: #f0f0f0;
+    --grey: #888;
+    --dim: #333;
+    --line: #1e1e1e;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    cursor: crosshair;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 4rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s, background 0.4s;
+  }
+  nav.scrolled { background: rgba(8,8,8,0.95); border-color: var(--line); }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--white); text-decoration: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--grey); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, #1a1a1a 0%, var(--black) 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.4;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  }
+  .hero-label {
+    font-size: 0.65rem; letter-spacing: 0.3em; color: var(--grey);
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    position: relative;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-label::before { content: '— '; }
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 14rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    position: relative;
+    opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+  }
+  .hero-name span { display: block; }
+  .hero-title {
+    margin-top: 2rem;
+    font-size: 0.75rem; letter-spacing: 0.25em; color: var(--grey);
+    text-transform: uppercase; position: relative;
+    opacity: 0; animation: fadeUp 0.8s 0.7s forwards;
+  }
+  .hero-scroll {
+    position: absolute; right: 4rem; bottom: 5rem;
+    writing-mode: vertical-rl;
+    font-size: 0.6rem; letter-spacing: 0.2em; color: var(--dim);
+    text-transform: uppercase;
+    opacity: 0; animation: fadeIn 1s 1.2s forwards;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block; width: 1px; height: 60px;
+    background: var(--dim); margin: 1rem auto 0;
+    animation: lineGrow 1s 1.5s both;
+    transform-origin: top;
+  }
+  @keyframes lineGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* SECTIONS */
+  section { padding: 8rem 4rem; border-top: 1px solid var(--line); }
+  .section-header {
+    display: flex; align-items: baseline; gap: 2rem;
+    margin-bottom: 5rem;
+  }
+  .section-num { font-size: 0.6rem; color: var(--dim); letter-spacing: 0.2em; }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    letter-spacing: 0.05em;
+  }
+  .section-line { flex: 1; height: 1px; background: var(--line); }
+
+  /* ABOUT */
+  #about .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: start;
+  }
+  .about-text { font-size: 1.05rem; line-height: 1.9; color: #bbb; }
+  .about-text em { color: var(--white); font-style: normal; }
+  .about-details { display: flex; flex-direction: column; gap: 2rem; }
+  .detail-item { border-left: 1px solid var(--dim); padding-left: 1.5rem; }
+  .detail-label { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; margin-bottom: 0.4rem; }
+  .detail-value { font-size: 0.85rem; color: var(--white); }
+
+  /* EXPERIENCE */
+  #experience .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 3rem; padding: 3rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+  }
+  .exp-item:first-child { border-top: 1px solid var(--line); }
+  .exp-meta {}
+  .exp-period { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--grey); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .exp-company { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.1em; color: var(--white); }
+  .exp-role { font-size: 0.7rem; color: var(--grey); margin-top: 0.3rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .exp-content {}
+  .exp-desc { font-size: 0.82rem; line-height: 1.85; color: #999; margin-bottom: 1.2rem; }
+  .exp-points { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .exp-points li { font-size: 0.78rem; color: #777; padding-left: 1.2rem; position: relative; line-height: 1.7; }
+  .exp-points li::before { content: '↳'; position: absolute; left: 0; color: var(--dim); }
+
+  /* SKILLS */
+  #skills .skills-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  }
+  .skill-group { padding: 2.5rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .skill-group:nth-child(3n) { border-right: none; }
+  .skill-group:nth-last-child(-n+3) { border-bottom: none; }
+  .skill-group-label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--grey); margin-bottom: 1.2rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag { font-size: 0.68rem; padding: 0.35rem 0.8rem; border: 1px solid var(--dim); color: #aaa; letter-spacing: 0.05em; transition: all 0.2s; }
+  .skill-tag:hover { border-color: var(--white); color: var(--white); }
+
+  /* EDUCATION */
+  #education .edu-list { display: flex; flex-direction: column; gap: 0; }
+  .edu-item {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 3rem; padding: 2.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .edu-item:first-child { border-top: 1px solid var(--line); }
+  .edu-year { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--grey); text-transform: uppercase; }
+  .edu-degree { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+  .edu-inst { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.1em; }
+
+  /* CONTACT */
+  #contact { padding-bottom: 10rem; }
+  #contact .contact-inner { display: flex; justify-content: space-between; align-items: flex-end; }
+  .contact-cta { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 7rem); line-height: 1; letter-spacing: 0.03em; color: var(--white); }
+  .contact-cta span { display: block; color: var(--dim); }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; }
+  .contact-link { font-size: 0.72rem; letter-spacing: 0.15em; color: var(--grey); text-decoration: none; text-transform: uppercase; transition: color 0.2s; display: flex; align-items: center; gap: 0.8rem; }
+  .contact-link:hover { color: var(--white); }
+  .contact-link::after { content: '↗'; font-size: 0.8rem; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between;
+    font-size: 0.6rem; color: var(--dim); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    #hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    #skills .skills-grid { grid-template-columns: 1fr 1fr; }
+    #contact .contact-inner { flex-direction: column; align-items: flex-start; gap: 3rem; }
+    .hero-scroll { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AN</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <p class="hero-label">Customs &amp; Logistics Coordinator</p>
+  <h1 class="hero-name">
+    <span>Alwin</span>
+    <span>Newman</span>
+  </h1>
+  <p class="hero-title">Gauteng, South Africa &nbsp;·&nbsp; Operations &nbsp;·&nbsp; Logistics &nbsp;·&nbsp; Builder</p>
+  <p class="hero-scroll">Scroll</p>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">About</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid reveal">
+    <p class="about-text">
+      Operations-focused logistics professional with hands-on experience coordinating <em>import and export shipments</em>, customs documentation, freight movements, and warehouse workflows in fast-paced environments.<br/><br/>
+      Beyond logistics, I build — turning operational problems into <em>automated, elegant solutions</em>. Whether it's streamlining a workflow or shipping a project, I focus on <em>accuracy, efficiency, and clean execution</em>.
+    </p>
+    <div class="about-details">
+      <div class="detail-item">
+        <div class="detail-label">Current Role</div>
+        <div class="detail-value">Customs &amp; Logistics Coordinator<br/>Expo Freight CC · 2023 – Present</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Location</div>
+        <div class="detail-value">Gauteng, South Africa</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Languages</div>
+        <div class="detail-value">English (Fluent) · Afrikaans (Fluent)</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">GitHub</div>
+        <div class="detail-value">github.com/itsnotalwin</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Experience</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="exp-list">
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2023 – Present</div>
+        <div class="exp-company">Expo Freight CC</div>
+        <div class="exp-role">Customs &amp; Logistics Coordinator</div>
+      </div>
+      <div class="exp-content">
+        <p class="exp-desc">Lead daily import/export shipment workflows end-to-end, from customs documentation through to delivery. Primary liaison between transporters, warehouses, and clients.</p>
+        <ul class="exp-points">
+          <li>Coordinate daily import and export shipment workflows including customs documentation, cargo tracking, and delivery scheduling</li>
+          <li>Prepare and process shipping, invoicing, and customs documentation ensuring SARS compliance</li>
+          <li>Monitor cross-border shipments and resolve delays, discrepancies, and operational escalations</li>
+          <li>Generate Excel-based operational reports and maintain accurate shipment and workflow records</li>
+          <li>Support warehouse coordination through stock movement tracking and dispatch workflow management</li>
+          <li>Assist with team supervision and workflow allocation during high-volume periods</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2017 – 2019</div>
+        <div class="exp-company">Likeshou China</div>
+        <div class="exp-role">English Language Instructor</div>
+      </div>
+      <div class="exp-content">
+        <p class="exp-desc">Planned and delivered structured English lessons across varying proficiency levels in a fast-paced international environment.</p>
+        <ul class="exp-points">
+          <li>Adapted teaching methods and communication styles to improve engagement and individual learning outcomes</li>
+          <li>Managed classroom coordination, lesson preparation, and student progress assessment</li>
+          <li>Provided one-on-one mentorship supporting student confidence and exam preparation</li>
+          <li>Developed strong cross-cultural communication and presentation skills</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Ongoing</div>
+        <div class="exp-company">Freelance</div>
+        <div class="exp-role">Photography</div>
+      </div>
+      <div class="exp-content">
+        <p class="exp-desc">Independent photography practice spanning client communication, shoot coordination, post-production, and content delivery.</p>
+        <ul class="exp-points">
+          <li>Manage full project lifecycle from brief to final delivery independently</li>
+          <li>Handle scheduling, client requirements, and post-production workflows</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Skills</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="skill-group">
+      <div class="skill-group-label">Logistics &amp; Customs</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Import &amp; Export</span>
+        <span class="skill-tag">Customs Documentation</span>
+        <span class="skill-tag">SARS Compliance</span>
+        <span class="skill-tag">Road Freight</span>
+        <span class="skill-tag">Cargo Tracking</span>
+        <span class="skill-tag">Shipment Coordination</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Operations</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Warehouse Coordination</span>
+        <span class="skill-tag">Invoice Processing</span>
+        <span class="skill-tag">Workflow Optimization</span>
+        <span class="skill-tag">Team Coordination</span>
+        <span class="skill-tag">Operational Problem Solving</span>
+        <span class="skill-tag">Dispatch Management</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Technical</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Excel Reporting</span>
+        <span class="skill-tag">Client Communication</span>
+        <span class="skill-tag">Cross-border Logistics</span>
+        <span class="skill-tag">Documentation</span>
+        <span class="skill-tag">Data Accuracy</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Code</div>
+      <div class="skill-tags">
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Linux</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Communication</div>
+      <div class="skill-tags">
+        <span class="skill-tag">English (Fluent)</span>
+        <span class="skill-tag">Afrikaans (Fluent)</span>
+        <span class="skill-tag">Cross-cultural</span>
+        <span class="skill-tag">Stakeholder Liaison</span>
+        <span class="skill-tag">Presentation</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-label">Creative</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Photography</span>
+        <span class="skill-tag">Photo Editing</span>
+        <span class="skill-tag">Content Delivery</span>
+        <span class="skill-tag">Visual Composition</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Education</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="edu-list">
+    <div class="edu-item reveal">
+      <div class="edu-year">2011 – 2015</div>
+      <div>
+        <div class="edu-degree">Matric</div>
+        <div class="edu-inst">Jeugland High School</div>
+      </div>
+    </div>
+    <div class="edu-item reveal">
+      <div class="edu-year">2011 – 2015</div>
+      <div>
+        <div class="edu-degree">English Language Certificate</div>
+        <div class="edu-inst">CELTA 120hr · CERTESOL 60hr</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-inner reveal">
+    <div class="contact-cta">
+      <span>Let's</span>
+      <span>Work</span>
+      <span style="color:var(--white)">Together</span>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:alwin.newman97@gmail.com" class="contact-link">alwin.newman97@gmail.com</a>
+      <a href="tel:+27730958363" class="contact-link">+27 73 095 8363</a>
+      <a href="https://github.com/itsnotalwin" target="_blank" class="contact-link">github.com/itsnotalwin</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Alwin Newman · 2025</span>
+  <span>Gauteng, South Africa</span>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
