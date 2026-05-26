@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Alwin Newman</title>
+<title>Alwin Newman — Customs & Logistics Coordinator | Gauteng</title>
+<meta name="description" content="Alwin Newman — Customs & Logistics Coordinator based in Gauteng, South Africa. Experience in import/export coordination, SARS compliance, road freight, and warehouse operations at Expo Freight CC."/>
+<meta name="keywords" content="customs coordinator, logistics coordinator, freight forwarding, import export, SARS compliance, Gauteng, South Africa, supply chain"/>
+<meta property="og:title" content="Alwin Newman — Customs & Logistics Coordinator"/>
+<meta property="og:description" content="Operations-focused logistics professional based in Gauteng. Import/export coordination, customs documentation, freight operations."/>
+<meta property="og:type" content="website"/>
+<meta name="robots" content="index, follow"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -24,18 +30,7 @@
     overflow-x: hidden;
   }
 
-  /* GRAIN */
-  .grain {
-    position: fixed; inset: 0; pointer-events: none; z-index: 2; opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    background-size: 256px 256px; mix-blend-mode: soft-light;
-  }
 
-  /* SPOTLIGHT */
-  #spotlight {
-    pointer-events: none; position: fixed; inset: 0; z-index: 1;
-    background: radial-gradient(500px circle at var(--mx,-999px) var(--my,-999px), rgba(255,255,255,0.025) 0%, transparent 70%);
-  }
 
   /* NAV */
   nav {
@@ -255,8 +250,7 @@
 </head>
 <body>
 
-<div class="grain"></div>
-<div id="spotlight"></div>
+
 
 <nav id="navbar">
   <div class="nav-left">
@@ -280,6 +274,7 @@
       <span class="status-dot"></span>
       <span>Available</span>
     </div>
+    <a href="https://www.linkedin.com/in/alwinnewman/" target="_blank" class="print-btn">LinkedIn</a>
     <a href="print.html" target="_blank" class="print-btn">↓ CV</a>
   </div>
 </nav>
@@ -337,6 +332,10 @@
       <div class="detail-item">
         <div class="detail-label">Contact</div>
         <div class="detail-value">alwin.newman97@gmail.com</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">LinkedIn</div>
+        <div class="detail-value"><a href="https://www.linkedin.com/in/alwinnewman/" target="_blank" style="color:var(--white);text-decoration:none;">linkedin.com/in/alwinnewman</a></div>
       </div>
     </div>
   </div>
@@ -545,10 +544,11 @@
     <div class="avail-block">
       <div class="avail-block-label">Open To</div>
       <div class="avail-roles">
-        <div class="avail-role">Logistics &amp; Customs Coordination</div>
-        <div class="avail-role">Operations &amp; Workflow Management</div>
+        <div class="avail-role">Freight Forwarding &amp; Customs Coordination</div>
+        <div class="avail-role">Supply Chain &amp; Operations Management</div>
         <div class="avail-role">Process Automation &amp; Systems</div>
         <div class="avail-role">Tech-adjacent &amp; Hybrid Ops Roles</div>
+        <div class="avail-role">Cross-border Logistics &amp; Compliance</div>
       </div>
     </div>
     <div class="avail-block">
@@ -591,6 +591,7 @@
     <div class="contact-links">
       <a href="mailto:alwin.newman97@gmail.com" class="contact-link">alwin.newman97@gmail.com</a>
       <a href="tel:+27730958363" class="contact-link">+27 73 095 8363</a>
+      <a href="https://www.linkedin.com/in/alwinnewman/" target="_blank" class="contact-link">linkedin.com/in/alwinnewman</a>
       <a href="https://github.com/itsnotalwin" target="_blank" class="contact-link">github.com/itsnotalwin</a>
     </div>
   </div>
@@ -638,12 +639,6 @@
     });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // Spotlight
-  document.addEventListener('mousemove', e => {
-    document.getElementById('spotlight').style.setProperty('--mx', e.clientX + 'px');
-    document.getElementById('spotlight').style.setProperty('--my', e.clientY + 'px');
-  });
 
   // Clock
   function tick() {
